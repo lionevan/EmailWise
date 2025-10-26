@@ -9,6 +9,7 @@ import {
   FolderOpen,
   Plus,
   MessageSquare,
+  Inbox
 } from 'lucide-react';
 import {
   Sidebar,
@@ -21,13 +22,17 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
 
 const navigationItems = [
   {
     title: 'Dashboard',
     url: '/',
     icon: LayoutDashboard,
+  },
+  {
+    title: 'Inbox',
+    url: '/inbox',
+    icon: Inbox,
   },
   {
     title: 'AI Assistant',
@@ -57,7 +62,7 @@ export function AppSidebar() {
             <Mail className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="font-bold text-xl text-gray-900">Email Assistant</h2>
+            <h2 className="font-bold text-xl text-gray-900">EmailWise</h2>
             <p className="text-xs text-gray-500">Smart Management</p>
           </div>
         </div>
