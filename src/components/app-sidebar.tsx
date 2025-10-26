@@ -1,130 +1,96 @@
 'use client';
 
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
-  Bell,
-  Briefcase,
-  Inbox,
   Mail,
-  PenSquare,
-  Ticket,
-  User,
-  Users,
-  FileClock
+  LayoutDashboard,
+  FolderOpen,
+  Plus,
+  MessageSquare,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
+  Sidebar,
   SidebarContent,
-  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
 } from '@/components/ui/sidebar';
-import { Icons } from '@/components/icons';
-import type { EmailCategory } from '@/lib/types';
-import { Badge } from './ui/badge';
-import { Separator } from './ui/separator';
+import { cn } from '@/lib/utils';
 
-type AppSidebarProps = {
-  selectedCategory: EmailCategory | 'All' | 'Unread';
-  onSelectCategory: (category: EmailCategory | 'All' | 'Unread') => void;
-  unreadCounts: Record<string, number>;
-};
-
-const categoryIcons: Record<EmailCategory | 'All' | 'Unread', React.ElementType> = {
-  All: Inbox,
-  Unread: FileClock,
-  Personal: User,
-  Work: Briefcase,
-  Social: Users,
-  Promotions: Ticket,
-  Updates: Bell,
-  Other: Mail,
-};
-
-const categories: (EmailCategory | 'All' | 'Unread')[] = [
-  'All',
-  'Unread',
-  'Personal',
-  'Work',
-  'Social',
-  'Promotions',
-  'Updates',
-  'Other',
+const navigationItems = [
+  {
+    title: 'Dashboard',
+    url: '/',
+    icon: LayoutDashboard,
+  },
+  {
+    title: 'AI Assistant',
+    url: '/ai-assistant',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Categories',
+    url: '/categories',
+    icon: FolderOpen,
+  },
+  {
+    title: 'Add Email',
+    url: '/add-email',
+    icon: Plus,
+  },
 ];
 
-export function AppSidebar({
-  selectedCategory,
-  onSelectCategory,
-  unreadCounts,
-}: AppSidebarProps) {
+export function AppSidebar() {
+  const pathname = usePathname();
+
   return (
-    <>
-      <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <Icons.logo className="size-8 text-primary" />
-          <h2 className="text-xl font-semibold tracking-tight">EmailWise</h2>
+    <Sidebar>
+      <SidebarHeader className="p-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <Mail className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="font-bold text-xl text-gray-900">Email Assistant</h2>
+            <p className="text-xs text-gray-500">Smart Management</p>
+          </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className="p-2">
-        <div className="px-2 pb-2">
-          <Button className="w-full">
-            <PenSquare />
-            <span>Compose</span>
-          </Button>
-        </div>
-        <SidebarMenu>
-          {categories.slice(0, 2).map((category) => {
-            const Icon = categoryIcons[category];
-            const unreadCount = unreadCounts[category];
-            return (
-              <SidebarMenuItem key={category}>
-                <SidebarMenuButton
-                  onClick={() => onSelectCategory(category)}
-                  isActive={selectedCategory === category}
-                  className="justify-start"
-                >
-                  <Icon />
-                  <span>{category}</span>
-                  {unreadCount > 0 && (
-                     <Badge variant="secondary" className="ml-auto">{unreadCount}</Badge>
-                  )}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
 
-        <Separator className="my-2"/>
-
-        <SidebarMenu>
-          <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Categories</div>
-          {categories.slice(2).map((category) => {
-            const Icon = categoryIcons[category];
-            const unreadCount = unreadCounts[category];
-            return (
-              <SidebarMenuItem key={category}>
-                <SidebarMenuButton
-                  onClick={() => onSelectCategory(category)}
-                  isActive={selectedCategory === category}
-                  className="justify-start"
-                >
-                  <Icon />
-                  <span>{category}</span>
-                  {unreadCount > 0 && (
-                    <Badge variant="secondary" className="ml-auto">{unreadCount}</Badge>
-                  )}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
+      <SidebarContent className="p-3">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-sm font-semibold text-gray-600 px-3 py-2">
+            Main Menu
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.url}
+                    className="mb-1"
+                  >
+                    <Link
+                      href={item.url}
+                      className="flex items-center gap-3 px-4 py-3"
+                    >
+                      <item.icon className="w-5 h-5" />
+                      <span className="font-medium">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} EmailWise
-        </p>
-      </SidebarFooter>
-    </>
+    </Sidebar>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
 
 export const metadata: Metadata = {
   title: 'EmailWise',
@@ -26,9 +28,14 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased h-full bg-background">
-        {children}
-        <Toaster />
+      <body className="font-body antialiased h-full bg-gradient-to-br from-slate-50 to-blue-50">
+        <SidebarProvider>
+          <div className="flex h-full w-full">
+            <AppSidebar />
+            {children}
+          </div>
+          <Toaster />
+        </SidebarProvider>
       </body>
     </html>
   );
